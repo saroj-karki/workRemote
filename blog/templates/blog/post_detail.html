@@ -22,7 +22,7 @@
 
 {% if not object.author == user %}
     <div>
-        <a class="btn btn-success btn-sm mt-1 mb-1 float-right" href="#">Apply Now!</a>
+        <a class="btn btn-success btn-sm mt-1 mb-1 float-right" href="{% url 'job-apply' post.id %}">Apply Now!</a>
     </div>
 {% else %}
     <div>

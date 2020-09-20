@@ -1,6 +1,16 @@
 {% extends "blog/base.html" %}
 
 {% block content %}
+<div class="d-flex flex-row-reverse">
+  <div class="form-inline my-2">
+    <!-- <label class="font-weight-bold" for="name">Find the Jobs: </label> -->
+    <form method="GET" action="{% url 'job-search' %}" class="my-2 my-lg-0 margin-left-5">
+      <input class="form-control mr-sm-2" type="search" placeholder="Search Job" aria-label="Search"
+        name="query" id="query">
+      <button class="btn btn-outline-secondary my-2 my-sm-0" type="submit">Search</button>
+    </form>
+  </div>
+</div>
 {% for post in posts %}
 
 <article class="media content-section">

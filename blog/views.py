@@ -3,6 +3,8 @@ from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.models import User
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from .models import Post
+from django.contrib import messages
+from django.core.paginator import Paginator
 
 # Create your views here.
 
@@ -72,3 +74,24 @@ class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
 
 def about(request):
     return render(request, 'blog/about.html', {'title': 'About'})
+
+def job_apply(request, pk):
+    return render(request, 'blog/job_apply.html', {'title': 'Job Application'})
+
+def job_search(request):
+    query = request.GET['query']
+    
+    if len(query)>70:
+        allPosts = Post.objects.none()
+    else:
+        allPostsTitle = Post.objects.filter(title__icontains=query)
+        allPostsContent = Post.objects.filter(content__icontains=query)
+        allPosts = allPostsTitle.union(allPostsContent)
+
+        paginator = Paginator(allPosts, 25) 
+
+    if allPosts.count() == 0:
+        messages.warning(request, "No search results found. Please search valid content.")    
+    context = {'allPosts': allPosts}
+
+    return render(request, 'blog/search.html', context)
