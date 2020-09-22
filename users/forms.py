@@ -7,19 +7,24 @@ from .models import Profile
 
 class UserRegisterForm(UserCreationForm):
 
-#     GEEKS_CHOICES =( 
-#     ("1", "Personal"), 
-#     ("2", "Organization"), 
-# ) 
 
     email = forms.EmailField()
-    email2 = forms.EmailField()
-    organization = forms.CharField()
-    # account_type = forms.ChoiceField(choices = GEEKS_CHOICES) 
 
     class Meta:
         model = User
-        fields = ['username','organization', 'email', 'email2', 'password1', 'password2']
+        fields = ['username', 'email', 'password1', 'password2']
+
+
+class UserProfileForm(forms.ModelForm):
+    CHOICES =( 
+        ("organization", "Organization"), 
+        ("personal", "Personal"), 
+    ) 
+    # account_type = forms.CharField(max_length=200)
+    account_type = forms.ChoiceField(choices = CHOICES)
+    class Meta:
+        model = Profile
+        fields = ['account_type']
 
 
 class UserUpdateForm(forms.ModelForm):

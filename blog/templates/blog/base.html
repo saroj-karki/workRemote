@@ -39,12 +39,20 @@
           <!-- Navbar Right Side -->
           <div class="navbar-nav">
             {% if user.is_authenticated %}
-            <a class="nav-item nav-link" href="{% url 'post-create' %}">Post Job</a>
-            <a href="{% url 'profile' %}" class="avatar avatar-xs rounded-circle">
-              <img alt="Image placeholder" src="{{ user.profile.image.url }}"
-                style="width: 40px; border-radius: 400px "></a>
-            <!-- <a class="nav-item nav-link" href="{% url 'profile' %}">Profile</a> -->
-            <a class="nav-item nav-link" href="{% url 'logout' %}">Logout</a>
+            {% if user.profile.account_type == "organization" %}
+              <a class="nav-item nav-link" href="{% url 'post-create' %}">Post Job</a>
+              <!-- <a href="{% url 'profile' %}" class="avatar avatar-xs rounded-circle">
+                <img alt="Image placeholder" src="{{ user.profile.image.url }}"
+                  style="width: 40px; border-radius: 400px "></a> -->
+              <a class="nav-item nav-link" href="{% url 'profile' %}">Profile</a>
+              <a class="nav-item nav-link" href="{% url 'logout' %}">Logout</a>
+            {% else %}
+              <!-- <a href="{% url 'profile' %}" class="avatar avatar-xs rounded-circle">
+                <img alt="Image placeholder" src="{{ user.profile.image.url }}"
+                  style="width: 40px; border-radius: 400px "></a> -->
+              <a class="nav-item nav-link" href="{% url 'profile' %}">Profile</a>
+              <a class="nav-item nav-link" href="{% url 'logout' %}">Logout</a>
+            {% endif %}
             {% else %}
             <a class="nav-item nav-link" href="{% url 'login' %}">Login</a>
             <a class="nav-item nav-link" href="{% url 'register' %}">Register</a>
@@ -66,7 +74,7 @@
         {% endfor %}
         {% endif %}
 
-        
+
         {% block content %}{% endblock %}
       </div>
       <div class="col-md-4">
