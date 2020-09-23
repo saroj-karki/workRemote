@@ -95,3 +95,6 @@ def job_search(request):
     context = {'allPosts': allPosts}
 
     return render(request, 'blog/search.html', context)
+
+def job_dashboard(request, pk):
+    return render(request, 'blog/dashboard.html', {'title': 'Job Application'})

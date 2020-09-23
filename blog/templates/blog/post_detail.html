@@ -26,7 +26,7 @@
     </div>
 {% else %}
     <div>
-        <a class="btn btn-success btn-sm mt-1 mb-1 float-right" href="#">See Applicants</a>
+        <a class="btn btn-success btn-sm mt-1 mb-1 float-right" href="{% url 'job-dashboard' post.id %}">See Applicants</a>
     </div>
 {% endif %}
 
