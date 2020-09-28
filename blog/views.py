@@ -76,7 +76,19 @@ def about(request):
     return render(request, 'blog/about.html', {'title': 'About'})
 
 def job_apply(request, pk):
-    return render(request, 'blog/job_apply.html', {'title': 'Job Application'})
+    if request.method=="POST":
+        name = request.POST.get("name")
+        email = request.POST.get("email")
+        phone = request.POST.get("phone")
+        work_experience = request.POST.get("wexperience")
+        user = request.user
+        post = Post.objects.filter(pk=pk).first()
+
+        apply_job = JobApplication(name=name, email=email, phone=phone, work_experience=work_experience, user=user, post=post)
+        apply_job.save()
+        messages.success(request, "Your application has been posted successfully!!")
+
+    return render(request, 'blog/job_apply.html',)
 
 def job_search(request):
     query = request.GET['query']
