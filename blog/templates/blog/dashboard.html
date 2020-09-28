@@ -17,21 +17,15 @@
                     <th>Status</th>
                     <th>Details</th>
                     <th>Remove</th>
-                </tr>
-                <tr>
-                    <td>Name1</td>
+				</tr>
+				{% for applicant in job_applicant %}
+				<tr>
+                    <td>{{applicant.name}}</td>
                     <td>Pending</td>
                     <td><a class="btn btn-sm btn-info" href="#">View</a></td>
                     <td><a class="btn btn-sm btn-danger" href="#">Delete</a></td>
-                </tr>
-                <tr>
-                    <td>Name2</td>
-                    <td>Pending</td>
-                    <td><a class="btn btn-sm btn-info" href="#">View</a></td>
-                    <td><a class="btn btn-sm btn-danger" href="#">Delete</a></td>
-                </tr>
-                
-
+				</tr>
+				{% endfor %}
 			</table>
 		</div>
 	</div>

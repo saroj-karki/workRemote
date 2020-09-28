@@ -2,7 +2,7 @@ from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.models import User
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
-from .models import Post
+from .models import Post, JobApplication
 from django.contrib import messages
 from django.core.paginator import Paginator
 
@@ -97,4 +97,8 @@ def job_search(request):
     return render(request, 'blog/search.html', context)
 
 def job_dashboard(request, pk):
-    return render(request, 'blog/dashboard.html', {'title': 'Job Application'})
+    post = Post.objects.filter(pk=pk).first()
+    job_applicant = JobApplication.objects.filter(post=post)
+    
+    context = {'job_applicant': job_applicant}
+    return render(request, 'blog/dashboard.html', context)
