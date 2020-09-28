@@ -100,5 +100,10 @@ def job_dashboard(request, pk):
     post = Post.objects.filter(pk=pk).first()
     job_applicant = JobApplication.objects.filter(post=post)
     
-    context = {'job_applicant': job_applicant}
+    total_applicants = job_applicant.count()
+    print(total_applicants)
+
+    context = {'job_applicant': job_applicant,
+                'total_applicants': total_applicants
+                }
     return render(request, 'blog/dashboard.html', context)
