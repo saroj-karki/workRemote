@@ -3,6 +3,7 @@ from django.utils import timezone
 from django.contrib.auth.models import User
 from django.urls import reverse
 from phone_field import PhoneField
+from django import forms 
 
 # Create your models here.
 
@@ -28,6 +29,7 @@ class JobApplication(models.Model):
     email = models.EmailField(max_length=100)
     phone = PhoneField(blank=True, help_text='Enter phone number')
     work_experience = models.TextField()
+    resume = models.FileField(upload_to = 'resume')
 
     def __str__(self):
         return self.name

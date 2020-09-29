@@ -5,6 +5,7 @@ from django.views.generic import ListView, DetailView, CreateView, UpdateView, D
 from .models import Post, JobApplication
 from django.contrib import messages
 from django.core.paginator import Paginator
+from django.core.files.storage import FileSystemStorage
 
 # Create your views here.
 
@@ -76,7 +77,13 @@ def about(request):
     return render(request, 'blog/about.html', {'title': 'About'})
 
 def job_apply(request, pk):
-    if request.method=="POST":
+    if request.method=="POST" and request.FILES['myfile']:
+
+        myfile = request.FILES['myfile']
+        fs = FileSystemStorage()
+        filename = fs.save(myfile.name, myfile)
+        uploaded_file_url = fs.url(filename)
+
         name = request.POST.get("name")
         email = request.POST.get("email")
         phone = request.POST.get("phone")
@@ -84,7 +91,7 @@ def job_apply(request, pk):
         user = request.user
         post = Post.objects.filter(pk=pk).first()
 
-        apply_job = JobApplication(name=name, email=email, phone=phone, work_experience=work_experience, user=user, post=post)
+        apply_job = JobApplication(name=name, email=email, phone=phone, work_experience=work_experience, user=user, post=post, resume= myfile)
         apply_job.save()
         messages.success(request, "Your application has been posted successfully!!")
 
