@@ -22,7 +22,8 @@
 				<tr>
                     <td>{{applicant.name}}</td>
                     <td>Pending</td>
-                    <td><a class="btn btn-sm btn-info" href="#">View</a></td>
+                    <td><a class="btn btn-sm btn-info" href="{% url 'applicant-detail' applicant.post.id applicant.sno %}">View</a></td>
+                    <!-- <td><a class="btn btn-sm btn-info" href="#">View</a></td> -->
                     <td><a class="btn btn-sm btn-danger" href="#">Delete</a></td>
 				</tr>
 				{% endfor %}

@@ -1,0 +1,19 @@
+{% extends "blog/base.html" %}
+
+{% block content %}
+<ul class="list-group">
+    <label class="font-weight-bold" for="fullName">Full Name</label>
+    <li class="list-group-item mb-3">{{applicant_detail.name}}</li>
+    <label class="font-weight-bold" for="fullName">Email</label>
+    <li class="list-group-item mb-3">{{applicant_detail.email}}</li>
+    <label class="font-weight-bold" for="fullName">Phone</label>
+    <li class="list-group-item mb-3">{{applicant_detail.phone}}</li>
+    <label class="font-weight-bold" for="fullName">Work Experience</label>
+    <textarea disabled class="form-control" aria-label="With textarea">{{applicant_detail.work_experience}}</textarea>
+  </ul>
+  <div >
+    <button type="button" class="btn btn-danger float-right my-3 mx-3">Delete</button>
+    <button type="button" class="btn btn-success float-right my-3">Accept</button>
+  </div>
+
+{% endblock content %}

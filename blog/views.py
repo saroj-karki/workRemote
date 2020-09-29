@@ -113,9 +113,25 @@ def job_dashboard(request, pk):
     job_applicant = JobApplication.objects.filter(post=post)
     
     total_applicants = job_applicant.count()
-    print(total_applicants)
+    # print(total_applicants)
 
     context = {'job_applicant': job_applicant,
                 'total_applicants': total_applicants
                 }
     return render(request, 'blog/dashboard.html', context)
+
+
+def applicant_detail(request, pk, sno):
+    post = Post.objects.filter(pk=pk).first()
+    job_applicant = JobApplication.objects.filter(post=post)
+
+    applicant_detail = JobApplication.objects.filter(sno=sno).first()
+    print(applicant_detail)
+    print(applicant_detail.name)
+    print(applicant_detail.email)
+
+    context = {
+        'applicant_detail': applicant_detail
+    }
+
+    return render(request, 'blog/applicant_detail.html', context)
