@@ -29,7 +29,7 @@ class JobApplication(models.Model):
     email = models.EmailField(max_length=100)
     phone = PhoneField(blank=True, help_text='Enter phone number')
     work_experience = models.TextField()
-    resume = models.FileField(upload_to = 'resume')
+    resume = models.FileField(upload_to = 'resume', default='resume/default_resume.jpg')
 
     def __str__(self):
         return self.name
