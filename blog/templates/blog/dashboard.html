@@ -21,7 +21,7 @@
 				{% for applicant in job_applicant %}
 				<tr>
                     <td>{{applicant.name}}</td>
-                    <td>Pending</td>
+                    <td>{{applicant.status}}</td>
                     <td><a class="btn btn-sm btn-info" href="{% url 'applicant-detail' applicant.post.id applicant.sno %}">View</a></td>
                     <!-- <td><a class="btn btn-sm btn-info" href="#">View</a></td> -->
                     <td><a class="btn btn-sm btn-danger" href="{% url 'applicant-delete' applicant.post.id applicant.sno %}">Delete</a></td>

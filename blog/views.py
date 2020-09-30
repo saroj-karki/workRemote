@@ -119,13 +119,18 @@ def job_search(request):
 
 def job_dashboard(request, pk):
     post = Post.objects.filter(pk=pk).first()
-    job_applicant = JobApplication.objects.filter(post=post)
+    job_applicants = JobApplication.objects.filter(post=post)
     
-    total_applicants = job_applicant.count()
-    # print(total_applicants)
+    total_applicants = job_applicants.count()
 
-    context = {'job_applicant': job_applicant,
-                'total_applicants': total_applicants
+    pending_count = JobApplication.objects.filter(post=post, status='pending').count()
+    approved_count = JobApplication.objects.filter(post=post, status='approved').count()
+    # print(pending_count)
+
+    context = { 'job_applicant': job_applicants,
+                'total_applicants': total_applicants,
+                'pending_count': pending_count,
+                'approved_count': approved_count
                 }
     return render(request, 'blog/dashboard.html', context)
 
