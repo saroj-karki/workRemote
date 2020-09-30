@@ -169,3 +169,4 @@ def job_applicant_delete(request, pk, sno):
         return render(request, 'blog/application_confirm_delete.html')
 
     return render(request, 'blog/dashboard.html', context)
+
