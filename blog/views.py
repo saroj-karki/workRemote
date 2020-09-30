@@ -6,6 +6,8 @@ from .models import Post, JobApplication
 from django.contrib import messages
 from django.core.paginator import Paginator
 from django.core.files.storage import FileSystemStorage
+from django.shortcuts import redirect
+from django.urls import reverse
 
 # Create your views here.
 
@@ -80,9 +82,9 @@ def job_apply(request, pk):
     if request.method=="POST" and request.FILES['myfile']:
 
         myfile = request.FILES['myfile']
-        fs = FileSystemStorage()
-        filename = fs.save(myfile.name, myfile)
-        uploaded_file_url = fs.url(filename)
+        # fs = FileSystemStorage()
+        # filename = fs.save(myfile.name, myfile)
+        # uploaded_file_url = fs.url(filename)
 
         name = request.POST.get("name")
         email = request.POST.get("email")
@@ -133,12 +135,37 @@ def applicant_detail(request, pk, sno):
     job_applicant = JobApplication.objects.filter(post=post)
 
     applicant_detail = JobApplication.objects.filter(sno=sno).first()
-    print(applicant_detail)
-    print(applicant_detail.name)
-    print(applicant_detail.email)
+    # print(applicant_detail)
+    # print(applicant_detail.name)
+    # print(applicant_detail.email)
 
     context = {
         'applicant_detail': applicant_detail
     }
 
     return render(request, 'blog/applicant_detail.html', context)
+
+
+def job_applicant_delete(request, pk, sno):
+
+    if request.method == 'POST':
+        post = Post.objects.filter(pk=pk).first()
+        
+
+        applicant = JobApplication.objects.filter(sno=sno).first()
+        applicant.delete()
+        messages.success(request, "Applicant successfully deleted.")
+        job_applicant = JobApplication.objects.filter(post=post)
+    
+        total_applicants = job_applicant.count()
+
+
+        context = {'job_applicant': job_applicant,
+                'total_applicants': total_applicants
+                }
+        return render(request, 'blog/dashboard.html', context)
+
+    else:
+        return render(request, 'blog/application_confirm_delete.html')
+
+    return render(request, 'blog/dashboard.html', context)
