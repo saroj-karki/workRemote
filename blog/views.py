@@ -163,10 +163,14 @@ def job_applicant_delete(request, pk, sno):
         job_applicant = JobApplication.objects.filter(post=post)
     
         total_applicants = job_applicant.count()
+        pending_count = JobApplication.objects.filter(post=post, status='pending').count()
+        approved_count = JobApplication.objects.filter(post=post, status='approved').count()
 
 
         context = {'job_applicant': job_applicant,
-                'total_applicants': total_applicants
+                    'total_applicants': total_applicants,
+                    'pending_count': pending_count,
+                    'approved_count': approved_count
                 }
         return render(request, 'blog/dashboard.html', context)
 
@@ -174,4 +178,35 @@ def job_applicant_delete(request, pk, sno):
         return render(request, 'blog/application_confirm_delete.html')
 
     return render(request, 'blog/dashboard.html', context)
+
+
+def job_applicant_approve(request, pk, sno):
+
+    if request.method == 'POST':
+        post = Post.objects.filter(pk=pk).first()
+        
+        applicant = JobApplication.objects.filter(sno=sno).update(status='approved')
+        # applicant.update(status='approved')
+        messages.success(request, "Applicant approved successfully.")
+
+        job_applicant = JobApplication.objects.filter(post=post)
+    
+        total_applicants = job_applicant.count()
+        pending_count = JobApplication.objects.filter(post=post, status='pending').count()
+        approved_count = JobApplication.objects.filter(post=post, status='approved').count()
+
+
+
+        context = {'job_applicant': job_applicant,
+                    'total_applicants': total_applicants,
+                    'pending_count': pending_count,
+                    'approved_count': approved_count
+                }
+        return render(request, 'blog/dashboard.html', context)
+
+    else:
+        return render(request, 'blog/application_approve.html')
+
+    return render(request, 'blog/dashboard.html', context)
+
 
