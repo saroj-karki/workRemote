@@ -105,6 +105,22 @@ def job_apply(request, pk):
 
     return render(request, 'blog/job_apply.html',)
 
+
+class JobApplyView(LoginRequiredMixin, CreateView):
+    model = JobApplication
+    fields = ['name', 'email', 'phone', 'work_experience', 'resume',]
+    template_name = 'blog/job_apply1.html'
+    success_url = '/'
+
+    def form_valid(self, form):
+        form.instance.author = self.request.user
+        form.instance.post = self.get_object()
+
+        print(self.request.user)
+        print(self.get_object())
+        print(form.cleaned_data)
+        return super().form_valid(form)
+
 def job_search(request):
     query = request.GET['query']
     
