@@ -8,14 +8,18 @@ from django.core.paginator import Paginator
 from django.core.files.storage import FileSystemStorage
 from django.shortcuts import redirect
 from django.urls import reverse
+from bootstrap_datepicker_plus import DatePickerInput
+
+
 
 # Create your views here.
 
 
 def home(request):
+
     
     context = {
-        'posts': Post.objects.all()
+        'posts': Post.objects.all(),
     }
     return render(request, 'blog/home.html', context)
 
@@ -44,11 +48,16 @@ class PostDetailView(DetailView):
 
 class PostCreateView(LoginRequiredMixin, CreateView):
     model = Post
-    fields = ['title', 'content']
+    fields = ['title', 'content', 'end_date']
 
     def form_valid(self, form):
         form.instance.author = self.request.user
         return super().form_valid(form)
+
+    def get_form(self):
+        form = super().get_form()
+        form.fields['end_date'].widget = DatePickerInput()
+        return form
 
 class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Post
