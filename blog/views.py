@@ -5,7 +5,6 @@ from django.views.generic import ListView, DetailView, CreateView, UpdateView, D
 from .models import Post, JobApplication
 from django.contrib import messages
 from django.core.paginator import Paginator
-from django.core.files.storage import FileSystemStorage
 from django.shortcuts import redirect
 from django.urls import reverse
 from bootstrap_datepicker_plus import DatePickerInput
@@ -91,9 +90,7 @@ def job_apply(request, pk):
     if request.method=="POST" and request.FILES['myfile']:
 
         myfile = request.FILES['myfile']
-        # fs = FileSystemStorage()
-        # filename = fs.save(myfile.name, myfile)
-        # uploaded_file_url = fs.url(filename)
+
 
         name = request.POST.get("name")
         email = request.POST.get("email")
