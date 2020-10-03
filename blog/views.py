@@ -1,13 +1,14 @@
 from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.models import User
-from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView, View
 from .models import Post, JobApplication
 from django.contrib import messages
 from django.core.paginator import Paginator
 from django.shortcuts import redirect
 from django.urls import reverse
 from bootstrap_datepicker_plus import DatePickerInput
+from .forms import JobApplyForm
 
 
 
@@ -98,6 +99,7 @@ def job_apply(request, pk):
         work_experience = request.POST.get("wexperience")
         user = request.user
         post = Post.objects.filter(pk=pk).first()
+        print(post)
 
         apply_job = JobApplication(name=name, email=email, phone=phone, work_experience=work_experience, user=user, post=post, resume= myfile)
         apply_job.save()
@@ -108,18 +110,24 @@ def job_apply(request, pk):
 
 class JobApplyView(LoginRequiredMixin, CreateView):
     model = JobApplication
-    fields = ['name', 'email', 'phone', 'work_experience', 'resume',]
+    # fields = ['name', 'email', 'phone', 'work_experience', 'resume']
     template_name = 'blog/job_apply1.html'
-    success_url = '/'
+    form_class = JobApplyForm
 
     def form_valid(self, form):
-        form.instance.author = self.request.user
-        form.instance.post = self.get_object()
+        form.instance.user = self.request.user
+    
+        post = Post.objects.get(pk=self.kwargs['pk'])
+        form.instance.post = post
+        # print(post)
+        form.save()
+        return redirect(reverse('post-detail', kwargs={
+            'pk': form.instance.post.pk
+        }))
 
-        print(self.request.user)
-        print(self.get_object())
-        print(form.cleaned_data)
-        return super().form_valid(form)
+    
+
+
 
 def job_search(request):
     query = request.GET['query']
