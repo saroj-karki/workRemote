@@ -91,7 +91,7 @@ def about(request):
 class JobApplyView(LoginRequiredMixin, CreateView):
     model = JobApplication
     # fields = ['name', 'email', 'phone', 'work_experience', 'resume']
-    template_name = 'blog/job_apply1.html'
+    template_name = 'blog/job_apply.html'
     form_class = JobApplyForm
 
     def form_valid(self, form):
