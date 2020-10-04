@@ -9,6 +9,7 @@ from django.shortcuts import redirect
 from django.urls import reverse
 from bootstrap_datepicker_plus import DatePickerInput
 from .forms import JobApplyForm
+from django.utils.encoding import uri_to_iri
 
 
 
@@ -107,7 +108,6 @@ class JobApplyView(LoginRequiredMixin, CreateView):
         }))
    
 
-
 class JobSearchView(ListView):
     template_name = 'blog/search.html'
     model = Post
@@ -130,9 +130,8 @@ class JobSearchView(ListView):
         return allPosts
 
 
-class DashboardView(LoginRequiredMixin, View):
+class DashboardView(LoginRequiredMixin, UserPassesTestMixin, View):
     template_name = 'blog/job_apply.html'
-
 
     def get(self, request, **kwargs):
         
@@ -151,48 +150,45 @@ class DashboardView(LoginRequiredMixin, View):
                     }
         return render(request, 'blog/dashboard.html', context)
 
+    def test_func(self):
+        post = Post.objects.get(pk=self.kwargs['pk'])
+        if self.request.user == post.author:
+            return True
+        return False
 
-def applicant_detail(request, pk, sno):
-    post = Post.objects.filter(pk=pk).first()
-    job_applicant = JobApplication.objects.filter(post=post)
+class ApplicantDetailView(LoginRequiredMixin, UserPassesTestMixin, DetailView):
+    model = JobApplication
+    template_name = 'blog/applicant_detail.html'
+    context_object_name = 'applicant_detail'
 
-    applicant_detail = JobApplication.objects.filter(sno=sno).first()
+    def get_object(self, **kwargs):
+        sno = self.kwargs.get('sno')
+        return get_object_or_404(JobApplication, sno=sno)
+
+    def test_func(self):
+        # post = self.kwargs.get('post')
+        post = Post.objects.get(pk=self.kwargs['pk'])
+        if self.request.user == post.author:
+            return True
+        return False
+
+
+class ApplicantDeleteView(LoginRequiredMixin,UserPassesTestMixin, DeleteView):
+    model = JobApplication
+    template_name = 'blog/application_confirm_delete.html'
+
+    def get_object(self, **kwargs):
+        sno = self.kwargs.get('sno')
+        return get_object_or_404(JobApplication, sno=sno)
     
+    def get_success_url(self):
+        return reverse('job-dashboard', kwargs={'pk': self.kwargs.get('pk')})
 
-    context = {
-        'applicant_detail': applicant_detail
-    }
-
-    return render(request, 'blog/applicant_detail.html', context)
-
-
-def job_applicant_delete(request, pk, sno):
-
-    if request.method == 'POST':
-        post = Post.objects.filter(pk=pk).first()
-        
-
-        applicant = JobApplication.objects.filter(sno=sno).first()
-        applicant.delete()
-        messages.success(request, "Applicant successfully deleted.")
-        job_applicant = JobApplication.objects.filter(post=post)
-    
-        total_applicants = job_applicant.count()
-        pending_count = JobApplication.objects.filter(post=post, status='pending').count()
-        approved_count = JobApplication.objects.filter(post=post, status='approved').count()
-
-
-        context = {'job_applicant': job_applicant,
-                    'total_applicants': total_applicants,
-                    'pending_count': pending_count,
-                    'approved_count': approved_count
-                }
-        return render(request, 'blog/dashboard.html', context)
-
-    else:
-        return render(request, 'blog/application_confirm_delete.html')
-
-    return render(request, 'blog/dashboard.html', context)
+    def test_func(self):
+        post = Post.objects.get(pk=self.kwargs['pk'])
+        if self.request.user == post.author:
+            return True
+        return False
 
 
 def job_applicant_approve(request, pk, sno):
