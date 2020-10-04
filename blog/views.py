@@ -90,7 +90,7 @@ def about(request):
 
 class JobApplyView(LoginRequiredMixin, CreateView):
     model = JobApplication
-    # fields = ['name', 'email', 'phone', 'work_experience', 'resume']
+    
     template_name = 'blog/job_apply.html'
     form_class = JobApplyForm
 
@@ -105,9 +105,7 @@ class JobApplyView(LoginRequiredMixin, CreateView):
         return redirect(reverse('post-detail', kwargs={
             'pk': form.instance.post.pk
         }))
-
-    
-
+   
 
 
 def job_search(request):
@@ -128,22 +126,27 @@ def job_search(request):
 
     return render(request, 'blog/search.html', context)
 
-def job_dashboard(request, pk):
-    post = Post.objects.filter(pk=pk).first()
-    job_applicants = JobApplication.objects.filter(post=post)
+
+class DashboardView(LoginRequiredMixin, View):
+    template_name = 'blog/job_apply.html'
+
+
+    def get(self, request, **kwargs):
+        
+        post = Post.objects.get(pk=self.kwargs['pk'])
+        job_applicants = JobApplication.objects.filter(post=post)
     
-    total_applicants = job_applicants.count()
+        total_applicants = job_applicants.count()
 
-    pending_count = JobApplication.objects.filter(post=post, status='pending').count()
-    approved_count = JobApplication.objects.filter(post=post, status='approved').count()
-    # print(pending_count)
+        pending_count = JobApplication.objects.filter(post=post, status='pending').count()
+        approved_count = JobApplication.objects.filter(post=post, status='approved').count()
 
-    context = { 'job_applicant': job_applicants,
-                'total_applicants': total_applicants,
-                'pending_count': pending_count,
-                'approved_count': approved_count
-                }
-    return render(request, 'blog/dashboard.html', context)
+        context = { 'job_applicant': job_applicants,
+                    'total_applicants': total_applicants,
+                    'pending_count': pending_count,
+                    'approved_count': approved_count
+                    }
+        return render(request, 'blog/dashboard.html', context)
 
 
 def applicant_detail(request, pk, sno):
@@ -151,9 +154,7 @@ def applicant_detail(request, pk, sno):
     job_applicant = JobApplication.objects.filter(post=post)
 
     applicant_detail = JobApplication.objects.filter(sno=sno).first()
-    # print(applicant_detail)
-    # print(applicant_detail.name)
-    # print(applicant_detail.email)
+    
 
     context = {
         'applicant_detail': applicant_detail
