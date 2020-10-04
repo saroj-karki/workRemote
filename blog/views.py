@@ -9,6 +9,7 @@ from django.shortcuts import redirect
 from django.urls import reverse
 from bootstrap_datepicker_plus import DatePickerInput
 from .forms import JobApplyForm
+from django.utils.encoding import uri_to_iri
 
 
 
@@ -107,7 +108,6 @@ class JobApplyView(LoginRequiredMixin, CreateView):
         }))
    
 
-
 class JobSearchView(ListView):
     template_name = 'blog/search.html'
     model = Post
@@ -133,7 +133,6 @@ class JobSearchView(ListView):
 class DashboardView(LoginRequiredMixin, View):
     template_name = 'blog/job_apply.html'
 
-
     def get(self, request, **kwargs):
         
         post = Post.objects.get(pk=self.kwargs['pk'])
@@ -151,19 +150,14 @@ class DashboardView(LoginRequiredMixin, View):
                     }
         return render(request, 'blog/dashboard.html', context)
 
+class ApplicantDetailView(DetailView):
+    model = JobApplication
+    template_name = 'blog/applicant_detail.html'
+    context_object_name = 'applicant_detail'
 
-def applicant_detail(request, pk, sno):
-    post = Post.objects.filter(pk=pk).first()
-    job_applicant = JobApplication.objects.filter(post=post)
-
-    applicant_detail = JobApplication.objects.filter(sno=sno).first()
-    
-
-    context = {
-        'applicant_detail': applicant_detail
-    }
-
-    return render(request, 'blog/applicant_detail.html', context)
+    def get_object(self, **kwargs):
+        sno = self.kwargs.get('sno')
+        return get_object_or_404(JobApplication, sno=sno)
 
 
 def job_applicant_delete(request, pk, sno):

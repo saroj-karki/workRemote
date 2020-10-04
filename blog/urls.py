@@ -1,5 +1,16 @@
 from django.urls import path
-from .views import PostListView, PostDetailView, PostCreateView, PostUpdateView, PostDeleteView, UserPostListView, JobApplyView, DashboardView, JobSearchView
+from .views import (
+    PostListView, 
+    PostDetailView, 
+    PostCreateView, 
+    PostUpdateView, 
+    PostDeleteView, 
+    UserPostListView, 
+    JobApplyView, 
+    DashboardView, 
+    JobSearchView,
+    ApplicantDetailView
+)
 from . import views
 
 urlpatterns = [
@@ -9,10 +20,9 @@ urlpatterns = [
     path('post/<int:pk>/update/', PostUpdateView.as_view(), name='post-update'),
     path('post/<int:pk>/delete/', PostDeleteView.as_view(), name='post-delete'),
     path('post/<int:pk>/job_apply/', JobApplyView.as_view(), name='job-apply'),
-
     path('post/<int:pk>/job_dashboard/', DashboardView.as_view(), name='job-dashboard'),
+    path('post/<int:pk>/job_dashboard/applicant_detail/<int:sno>/', ApplicantDetailView.as_view(), name='applicant-detail'),
 
-    path('post/<int:pk>/job_dashboard/applicant_detail/<int:sno>/', views.applicant_detail, name='applicant-detail'),
     path('post/<int:pk>/job_dashboard/<int:sno>/delete', views.job_applicant_delete, name='applicant-delete'),
     path('post/<int:pk>/job_dashboard/applicant_detail/<int:sno>/delete/', views.job_applicant_delete, name='applicant-delete2'),
     path('post/<int:pk>/job_dashboard/applicant_detail/<int:sno>/approve/', views.job_applicant_approve, name='applicant-approve'),
