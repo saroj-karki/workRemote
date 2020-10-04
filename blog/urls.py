@@ -10,7 +10,8 @@ from .views import (
     DashboardView, 
     JobSearchView,
     ApplicantDetailView,
-    ApplicantDeleteView
+    ApplicantDeleteView,
+    ApplicantApprove
 )
 from . import views
 
@@ -26,7 +27,7 @@ urlpatterns = [
     path('post/<int:pk>/job_dashboard/<int:sno>/delete/', ApplicantDeleteView.as_view(), name='applicant-delete'),
 
     path('post/<int:pk>/job_dashboard/applicant_detail/<int:sno>/delete/', ApplicantDeleteView.as_view(), name='applicant-delete2'),
-    path('post/<int:pk>/job_dashboard/applicant_detail/<int:sno>/approve/', views.job_applicant_approve, name='applicant-approve'),
+    path('post/<int:pk>/job_dashboard/applicant_detail/<int:sno>/approve/', ApplicantApprove.as_view(), name='applicant-approve'),
     path('post/new/', PostCreateView.as_view(), name='post-create'),
     path('search/', JobSearchView.as_view(), name='job-search'),
     path('about/', views.about, name='blog-about'),

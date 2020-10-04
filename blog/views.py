@@ -9,9 +9,6 @@ from django.shortcuts import redirect
 from django.urls import reverse
 from bootstrap_datepicker_plus import DatePickerInput
 from .forms import JobApplyForm
-from django.utils.encoding import uri_to_iri
-
-
 
 # Create your views here.
 
@@ -191,33 +188,23 @@ class ApplicantDeleteView(LoginRequiredMixin,UserPassesTestMixin, DeleteView):
         return False
 
 
-def job_applicant_approve(request, pk, sno):
-
-    if request.method == 'POST':
-        post = Post.objects.filter(pk=pk).first()
+class ApplicantApprove(LoginRequiredMixin,UserPassesTestMixin, View):
+    model = JobApplication
+    template_name = 'blog/application_approve.html'
         
-        applicant = JobApplication.objects.filter(sno=sno).update(status='approved')
-        # applicant.update(status='approved')
+    def get(self, request, **kwargs):
+        return render(self.request, 'blog/application_approve.html')
+
+    def post(self, request, **kwargs):
+        applicant = JobApplication.objects.get(pk=self.kwargs['sno'])
+        job_applicants = JobApplication.objects.filter(sno=self.kwargs['sno']).update(status='approved')
         messages.success(request, "Applicant approved successfully.")
+        return redirect('job-dashboard', pk=self.kwargs.get('pk'))
 
-        job_applicant = JobApplication.objects.filter(post=post)
-    
-        total_applicants = job_applicant.count()
-        pending_count = JobApplication.objects.filter(post=post, status='pending').count()
-        approved_count = JobApplication.objects.filter(post=post, status='approved').count()
-
-
-
-        context = {'job_applicant': job_applicant,
-                    'total_applicants': total_applicants,
-                    'pending_count': pending_count,
-                    'approved_count': approved_count
-                }
-        return render(request, 'blog/dashboard.html', context)
-
-    else:
-        return render(request, 'blog/application_approve.html')
-
-    return render(request, 'blog/dashboard.html', context)
+    def test_func(self):
+        post = Post.objects.get(pk=self.kwargs['pk'])
+        if self.request.user == post.author:
+            return True
+        return False
 
 
