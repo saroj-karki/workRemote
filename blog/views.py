@@ -108,23 +108,26 @@ class JobApplyView(LoginRequiredMixin, CreateView):
    
 
 
-def job_search(request):
-    query = request.GET['query']
-    
-    if len(query)>70:
-        allPosts = Post.objects.none()
-    else:
-        allPostsTitle = Post.objects.filter(title__icontains=query)
-        allPostsContent = Post.objects.filter(content__icontains=query)
-        allPosts = allPostsTitle.union(allPostsContent)
+class JobSearchView(ListView):
+    template_name = 'blog/search.html'
+    model = Post
+    context_object_name = 'allPosts'
 
-        paginator = Paginator(allPosts, 25) 
-
-    if allPosts.count() == 0:
-        messages.warning(request, "No search results found. Please search valid content.")    
-    context = {'allPosts': allPosts}
-
-    return render(request, 'blog/search.html', context)
+    def get_queryset(self):
+        query = self.request.GET.get('query')
+        if query:
+            if len(query)>70:
+                allPosts = Post.objects.none()
+                messages.warning(self.request, "No search results found. Please search valid content.")
+            else:
+                allPostsTitle = self.model.objects.filter(title__icontains=query)
+                allPostsContent = self.model.objects.filter(content__icontains=query)
+                allPosts = allPostsTitle.union(allPostsContent)
+                if allPosts.count() == 0:
+                    messages.warning(self.request, "No search results found. Please search valid content.")
+        else:
+            allPosts = self.model.objects.none()
+        return allPosts
 
 
 class DashboardView(LoginRequiredMixin, View):

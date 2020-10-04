@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import PostListView, PostDetailView, PostCreateView, PostUpdateView, PostDeleteView, UserPostListView, JobApplyView, DashboardView
+from .views import PostListView, PostDetailView, PostCreateView, PostUpdateView, PostDeleteView, UserPostListView, JobApplyView, DashboardView, JobSearchView
 from . import views
 
 urlpatterns = [
@@ -17,7 +17,7 @@ urlpatterns = [
     path('post/<int:pk>/job_dashboard/applicant_detail/<int:sno>/delete/', views.job_applicant_delete, name='applicant-delete2'),
     path('post/<int:pk>/job_dashboard/applicant_detail/<int:sno>/approve/', views.job_applicant_approve, name='applicant-approve'),
     path('post/new/', PostCreateView.as_view(), name='post-create'),
-    path('search/', views.job_search, name='job-search'),
+    path('search/', JobSearchView.as_view(), name='job-search'),
     path('about/', views.about, name='blog-about'),
 
 ]
