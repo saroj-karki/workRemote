@@ -4,6 +4,7 @@ from .models import JobApplication
 
 class JobApplyForm(forms.ModelForm):
     # email = forms.EmailField()
+    # resume = forms.FileField()
 
     class Meta:
         model = JobApplication

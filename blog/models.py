@@ -30,7 +30,8 @@ class JobApplication(models.Model):
     email = models.EmailField(max_length=100)
     phone = PhoneField(blank=True, help_text='Enter phone number')
     work_experience = models.TextField()
-    resume = models.FileField(upload_to = 'resume', default='resume/default_resume.jpg')
+    # resume = models.FileField(upload_to = 'resume', default='resume/default_resume.jpg')
+    resume = models.FileField(upload_to = 'resume')
     status = models.CharField(max_length=200, default='pending')
 
     def __str__(self):
