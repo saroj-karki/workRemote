@@ -109,9 +109,12 @@ class JobSearchView(ListView):
     template_name = 'blog/search.html'
     model = Post
     context_object_name = 'allPosts'
+    paginate_by = 2
 
     def get_queryset(self):
         query = self.request.GET.get('query')
+        page = self.request.GET.get('page')
+        print(page)
         if query:
             if len(query)>70:
                 allPosts = Post.objects.none()
@@ -120,6 +123,7 @@ class JobSearchView(ListView):
                 allPostsTitle = self.model.objects.filter(title__icontains=query)
                 allPostsContent = self.model.objects.filter(content__icontains=query)
                 allPosts = allPostsTitle.union(allPostsContent)
+                # queryset = Paginator.page(page)
                 if allPosts.count() == 0:
                     messages.warning(self.request, "No search results found. Please search valid content.")
         else:
