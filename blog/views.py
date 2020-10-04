@@ -130,7 +130,7 @@ class JobSearchView(ListView):
         return allPosts
 
 
-class DashboardView(LoginRequiredMixin, View):
+class DashboardView(LoginRequiredMixin, UserPassesTestMixin, View):
     template_name = 'blog/job_apply.html'
 
     def get(self, request, **kwargs):
@@ -150,7 +150,13 @@ class DashboardView(LoginRequiredMixin, View):
                     }
         return render(request, 'blog/dashboard.html', context)
 
-class ApplicantDetailView(DetailView):
+    def test_func(self):
+        post = Post.objects.get(pk=self.kwargs['pk'])
+        if self.request.user == post.author:
+            return True
+        return False
+
+class ApplicantDetailView(LoginRequiredMixin, UserPassesTestMixin, DetailView):
     model = JobApplication
     template_name = 'blog/applicant_detail.html'
     context_object_name = 'applicant_detail'
@@ -158,6 +164,13 @@ class ApplicantDetailView(DetailView):
     def get_object(self, **kwargs):
         sno = self.kwargs.get('sno')
         return get_object_or_404(JobApplication, sno=sno)
+
+    def test_func(self):
+        # post = self.kwargs.get('post')
+        post = Post.objects.get(pk=self.kwargs['pk'])
+        if self.request.user == post.author:
+            return True
+        return False
 
 
 def job_applicant_delete(request, pk, sno):
