@@ -173,33 +173,22 @@ class ApplicantDetailView(LoginRequiredMixin, UserPassesTestMixin, DetailView):
         return False
 
 
-def job_applicant_delete(request, pk, sno):
+class ApplicantDeleteView(LoginRequiredMixin,UserPassesTestMixin, DeleteView):
+    model = JobApplication
+    template_name = 'blog/application_confirm_delete.html'
 
-    if request.method == 'POST':
-        post = Post.objects.filter(pk=pk).first()
-        
-
-        applicant = JobApplication.objects.filter(sno=sno).first()
-        applicant.delete()
-        messages.success(request, "Applicant successfully deleted.")
-        job_applicant = JobApplication.objects.filter(post=post)
+    def get_object(self, **kwargs):
+        sno = self.kwargs.get('sno')
+        return get_object_or_404(JobApplication, sno=sno)
     
-        total_applicants = job_applicant.count()
-        pending_count = JobApplication.objects.filter(post=post, status='pending').count()
-        approved_count = JobApplication.objects.filter(post=post, status='approved').count()
+    def get_success_url(self):
+        return reverse('job-dashboard', kwargs={'pk': self.kwargs.get('pk')})
 
-
-        context = {'job_applicant': job_applicant,
-                    'total_applicants': total_applicants,
-                    'pending_count': pending_count,
-                    'approved_count': approved_count
-                }
-        return render(request, 'blog/dashboard.html', context)
-
-    else:
-        return render(request, 'blog/application_confirm_delete.html')
-
-    return render(request, 'blog/dashboard.html', context)
+    def test_func(self):
+        post = Post.objects.get(pk=self.kwargs['pk'])
+        if self.request.user == post.author:
+            return True
+        return False
 
 
 def job_applicant_approve(request, pk, sno):
