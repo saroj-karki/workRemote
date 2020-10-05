@@ -11,7 +11,7 @@
             </fieldset>
             <div class="form-group">
                 <button class="btn btn-outline-danger" type="submit">Yes, Delete</button>
-                <a class="btn btn-outline-secondary" href="">Cancel</a>
+                <a class="btn btn-outline-secondary" href="{% url 'job-dashboard' object.post.id %}">Cancel</a>
             </div>
         </form>
     </div>
