@@ -198,7 +198,10 @@ class ApplicantApprove(LoginRequiredMixin,UserPassesTestMixin, View):
     template_name = 'blog/application_approve.html'
         
     def get(self, request, **kwargs):
-        return render(self.request, 'blog/application_approve.html')
+        applicant = JobApplication.objects.get(pk=self.kwargs['sno'])
+        postid = applicant.post.id
+        context = { 'postid': postid }
+        return render(self.request, 'blog/application_approve.html', context)
 
     def post(self, request, **kwargs):
         applicant = JobApplication.objects.get(pk=self.kwargs['sno'])
