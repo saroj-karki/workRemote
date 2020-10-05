@@ -44,7 +44,7 @@ class PostDetailView(DetailView):
     model = Post
     
 
-class PostCreateView(LoginRequiredMixin, CreateView):
+class PostCreateView(LoginRequiredMixin,UserPassesTestMixin, CreateView):
     model = Post
     fields = ['title', 'content', 'end_date']
 
@@ -56,6 +56,11 @@ class PostCreateView(LoginRequiredMixin, CreateView):
         form = super().get_form()
         form.fields['end_date'].widget = DatePickerInput()
         return form
+
+    def test_func(self):
+        if self.request.user.profile.account_type == 'organization':
+            return True
+        return False
 
 class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Post
