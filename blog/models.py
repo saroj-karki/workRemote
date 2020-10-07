@@ -3,7 +3,9 @@ from django.utils import timezone
 from django.contrib.auth.models import User
 from django.urls import reverse
 from phone_field import PhoneField
-from django import forms 
+from django import forms
+from phonenumber_field.modelfields import PhoneNumberField
+
 
 # Create your models here.
 
@@ -28,7 +30,7 @@ class JobApplication(models.Model):
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
     name = models.CharField(max_length=200)
     email = models.EmailField(max_length=100)
-    phone = PhoneField(blank=True, help_text='Enter phone number')
+    phone = PhoneNumberField(blank=True)
     work_experience = models.TextField()
     # resume = models.FileField(upload_to = 'resume', default='resume/default_resume.jpg')
     resume = models.FileField(upload_to = 'resume')
