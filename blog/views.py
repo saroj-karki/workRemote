@@ -10,6 +10,9 @@ from django.urls import reverse
 from bootstrap_datepicker_plus import DatePickerInput
 from .forms import JobApplyForm
 
+from phonenumber_field.modelfields import PhoneNumberField
+from phonenumber_field.widgets import PhoneNumberPrefixWidget
+
 # Create your views here.
 
 
@@ -99,7 +102,8 @@ class JobApplyView(LoginRequiredMixin, CreateView):
 
     def form_valid(self, form):
         form.instance.user = self.request.user
-    
+        
+
         post = Post.objects.get(pk=self.kwargs['pk'])
         form.instance.post = post
         # form.save()
