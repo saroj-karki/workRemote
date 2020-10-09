@@ -21,6 +21,7 @@
             <small class="text-muted article-date">{{ post.date_posted|date:"F d, Y" }}</small>
         </div>
         <h2><a class="article-title" href="{% url 'post-detail' post.id %}">{{ post.title }}</a></h2>
+        <h2><a class="article-title" href="{% url 'post-detail' post.id %}">{{ pendingpost }}</a></h2>
         <p class="article-content">{{ post.content|safe| truncatechars:500 }}</p>
     </div>
 </article>

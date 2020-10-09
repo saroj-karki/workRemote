@@ -16,21 +16,21 @@ from phonenumber_field.widgets import PhoneNumberPrefixWidget
 # Create your views here.
 
 
-def home(request):
-
-    
-    context = {
-        'posts': Post.objects.all(),
-    }
-    return render(request, 'blog/home.html', context)
-
-
 class PostListView(ListView):
     model = Post
     template_name = 'blog/home.html'
     context_object_name = 'posts'
     ordering = ['-date_posted']
     paginate_by = 5
+
+    # def get_context_data(self, **kwargs):
+    #     context = super(PostListView, self).get_context_data(**kwargs)
+    #     post = Post.objects.filter(id=self.kwargs['id']).first()
+    #     context.update({'pendingpost': JobApplication.objects.filter(post=post, status='pending').count()})
+    #     pendingpost = JobApplication.objects.filter(status='pending').count()
+    #     context['pendingpost'] = pendingpost
+    #     print(pendingpost)
+    #     return context
 
 class UserPostListView(ListView):
     model = Post
@@ -202,7 +202,7 @@ class ApplicantDeleteView(LoginRequiredMixin,UserPassesTestMixin, DeleteView):
         return False
 
 
-class ApplicantApprove(LoginRequiredMixin,UserPassesTestMixin, View):
+class ApplicantApprove(LoginRequiredMixin, UserPassesTestMixin, View):
     model = JobApplication
     template_name = 'blog/application_approve.html'
         
