@@ -118,12 +118,10 @@ class JobSearchView(ListView):
     template_name = 'blog/search.html'
     model = Post
     context_object_name = 'allPosts'
-    # paginate_by = 2
+    paginate_by = 2
 
     def get_queryset(self):
         query = self.request.GET.get('query')
-        page = self.request.GET.get('page')
-        print(page)
         if query:
             if len(query)>70:
                 allPosts = Post.objects.none()

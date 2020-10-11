@@ -20,7 +20,7 @@ def register(request):
 
             else:
                 form = UserRegisterForm()
-                profile_form = UserProfileForm()
+                profile_form = UserProfileForm(request.POST)
 
             # user = form.save()
 
