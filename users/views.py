@@ -20,7 +20,7 @@ def register(request):
 
             else:
                 form = UserRegisterForm()
-                profile_form = UserProfileForm(request.POST)
+                profile_form = UserProfileForm()
 
             # user = form.save()
 
@@ -32,7 +32,7 @@ def register(request):
             # return redirect('login')
     else:
         form = UserRegisterForm()
-        profile_form = UserProfileForm(request.POST)
+        profile_form = UserProfileForm()
     context = {'form': form, 'profile_form': profile_form}
     return render(request, 'users/register.html', context)
 
