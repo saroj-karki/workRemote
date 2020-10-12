@@ -8,31 +8,29 @@ from django.core.paginator import Paginator
 from django.shortcuts import redirect
 from django.urls import reverse
 from bootstrap_datepicker_plus import DatePickerInput
-from .forms import JobApplyForm
+from .forms import JobApplyForm, PostForm
 
 from phonenumber_field.modelfields import PhoneNumberField
 from phonenumber_field.widgets import PhoneNumberPrefixWidget
 
+from .filters import PostFilter
+from django_filters.views import FilterView
+
+
 # Create your views here.
 
-
-class PostListView(ListView):
+class PostListView(FilterView):
+    '''Shows all the post in homepage'''
     model = Post
     template_name = 'blog/home.html'
     context_object_name = 'posts'
     ordering = ['-date_posted']
     paginate_by = 5
+    filterset_class = PostFilter
 
-    # def get_context_data(self, **kwargs):
-    #     context = super(PostListView, self).get_context_data(**kwargs)
-    #     post = Post.objects.filter(id=self.kwargs['id']).first()
-    #     context.update({'pendingpost': JobApplication.objects.filter(post=post, status='pending').count()})
-    #     pendingpost = JobApplication.objects.filter(status='pending').count()
-    #     context['pendingpost'] = pendingpost
-    #     print(pendingpost)
-    #     return context
 
 class UserPostListView(ListView):
+    '''Shows all the post of specific user'''
     model = Post
     template_name = 'blog/user_posts.html'
     context_object_name = 'posts'
@@ -44,12 +42,14 @@ class UserPostListView(ListView):
 
 
 class PostDetailView(DetailView):
+    '''Shows detail of a post'''
     model = Post
-    
+
 
 class PostCreateView(LoginRequiredMixin,UserPassesTestMixin, CreateView):
+    '''Creates new job post'''
     model = Post
-    fields = ['title', 'content', 'end_date']
+    form_class = PostForm
 
     def form_valid(self, form):
         form.instance.author = self.request.user
@@ -65,7 +65,9 @@ class PostCreateView(LoginRequiredMixin,UserPassesTestMixin, CreateView):
             return True
         return False
 
+
 class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+    '''Updates a specified post'''
     model = Post
     fields = ['title', 'content']
 
@@ -79,7 +81,9 @@ class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
             return True
         return False
 
+
 class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+    '''Deletes a specified post'''
     model = Post
     success_url = '/'
 
@@ -88,42 +92,38 @@ class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
         if self.request.user == post.author:
             return True
         return False
-    
+
 
 def about(request):
     return render(request, 'blog/about.html', {'title': 'About'})
 
 
 class JobApplyView(LoginRequiredMixin, CreateView):
+    '''Creates new job application'''
     model = JobApplication
-    
     template_name = 'blog/job_apply.html'
     form_class = JobApplyForm
 
     def form_valid(self, form):
         form.instance.user = self.request.user
-        
-
         post = Post.objects.get(pk=self.kwargs['pk'])
         form.instance.post = post
-        # form.save()
         super().form_valid(form)
         messages.success(self.request, "Job application submitted successfully!")
         return redirect(reverse('post-detail', kwargs={
             'pk': form.instance.post.pk
         }))
-   
+
 
 class JobSearchView(ListView):
+    '''Searches job with search query'''
     template_name = 'blog/search.html'
     model = Post
     context_object_name = 'allPosts'
-    # paginate_by = 2
+    paginate_by = 2
 
     def get_queryset(self):
         query = self.request.GET.get('query')
-        page = self.request.GET.get('page')
-        print(page)
         if query:
             if len(query)>70:
                 allPosts = Post.objects.none()
@@ -135,25 +135,21 @@ class JobSearchView(ListView):
                 
                 if allPosts.count() == 0:
                     messages.warning(self.request, "No search results found. Please search valid content.")
-                
         else:
             allPosts = self.model.objects.none()
         return allPosts
 
 
 class DashboardView(LoginRequiredMixin, UserPassesTestMixin, View):
+    '''Shows details of post in dashboard'''
     template_name = 'blog/job_apply.html'
 
-    def get(self, request, **kwargs):
-        
+    def get(self, request, **kwargs):    
         post = Post.objects.get(pk=self.kwargs['pk'])
         job_applicants = JobApplication.objects.filter(post=post)
-    
         total_applicants = job_applicants.count()
-
         pending_count = JobApplication.objects.filter(post=post, status='pending').count()
         approved_count = JobApplication.objects.filter(post=post, status='approved').count()
-
         context = { 'job_applicant': job_applicants,
                     'total_applicants': total_applicants,
                     'pending_count': pending_count,
@@ -167,7 +163,9 @@ class DashboardView(LoginRequiredMixin, UserPassesTestMixin, View):
             return True
         return False
 
+
 class ApplicantDetailView(LoginRequiredMixin, UserPassesTestMixin, DetailView):
+    '''Shows details of an applicant'''
     model = JobApplication
     template_name = 'blog/applicant_detail.html'
     context_object_name = 'applicant_detail'
@@ -177,7 +175,6 @@ class ApplicantDetailView(LoginRequiredMixin, UserPassesTestMixin, DetailView):
         return get_object_or_404(JobApplication, sno=sno)
 
     def test_func(self):
-        # post = self.kwargs.get('post')
         post = Post.objects.get(pk=self.kwargs['pk'])
         if self.request.user == post.author:
             return True
@@ -185,6 +182,7 @@ class ApplicantDetailView(LoginRequiredMixin, UserPassesTestMixin, DetailView):
 
 
 class ApplicantDeleteView(LoginRequiredMixin,UserPassesTestMixin, DeleteView):
+    '''Deletes specified job applicant'''
     model = JobApplication
     template_name = 'blog/application_confirm_delete.html'
 
@@ -203,6 +201,7 @@ class ApplicantDeleteView(LoginRequiredMixin,UserPassesTestMixin, DeleteView):
 
 
 class ApplicantApprove(LoginRequiredMixin, UserPassesTestMixin, View):
+    '''Approves specified job applicant'''
     model = JobApplication
     template_name = 'blog/application_approve.html'
         

@@ -25,7 +25,6 @@ urlpatterns = [
     path('post/<int:pk>/job_dashboard/', DashboardView.as_view(), name='job-dashboard'),
     path('post/<int:pk>/job_dashboard/applicant_detail/<int:sno>/', ApplicantDetailView.as_view(), name='applicant-detail'),
     path('post/<int:pk>/job_dashboard/<int:sno>/delete/', ApplicantDeleteView.as_view(), name='applicant-delete'),
-
     path('post/<int:pk>/job_dashboard/applicant_detail/<int:sno>/delete/', ApplicantDeleteView.as_view(), name='applicant-delete2'),
     path('post/<int:pk>/job_dashboard/applicant_detail/<int:sno>/approve/', ApplicantApprove.as_view(), name='applicant-approve'),
     path('post/new/', PostCreateView.as_view(), name='post-create'),
