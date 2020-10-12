@@ -20,6 +20,7 @@ from django_filters.views import FilterView
 # Create your views here.
 
 class PostListView(FilterView):
+    '''Shows all the post in homepage'''
     model = Post
     template_name = 'blog/home.html'
     context_object_name = 'posts'
@@ -29,6 +30,7 @@ class PostListView(FilterView):
 
 
 class UserPostListView(ListView):
+    '''Shows all the post of specific user'''
     model = Post
     template_name = 'blog/user_posts.html'
     context_object_name = 'posts'
@@ -40,12 +42,13 @@ class UserPostListView(ListView):
 
 
 class PostDetailView(DetailView):
+    '''Shows detail of a post'''
     model = Post
 
 
 class PostCreateView(LoginRequiredMixin,UserPassesTestMixin, CreateView):
+    '''Creates new job post'''
     model = Post
-    # fields = ['title', 'content', 'end_date']
     form_class = PostForm
 
     def form_valid(self, form):
@@ -64,6 +67,7 @@ class PostCreateView(LoginRequiredMixin,UserPassesTestMixin, CreateView):
 
 
 class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+    '''Updates a specified post'''
     model = Post
     fields = ['title', 'content']
 
@@ -79,6 +83,7 @@ class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
 
 
 class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+    '''Deletes a specified post'''
     model = Post
     success_url = '/'
 
@@ -94,6 +99,7 @@ def about(request):
 
 
 class JobApplyView(LoginRequiredMixin, CreateView):
+    '''Creates new job application'''
     model = JobApplication
     template_name = 'blog/job_apply.html'
     form_class = JobApplyForm
@@ -110,6 +116,7 @@ class JobApplyView(LoginRequiredMixin, CreateView):
 
 
 class JobSearchView(ListView):
+    '''Searches job with search query'''
     template_name = 'blog/search.html'
     model = Post
     context_object_name = 'allPosts'
@@ -134,6 +141,7 @@ class JobSearchView(ListView):
 
 
 class DashboardView(LoginRequiredMixin, UserPassesTestMixin, View):
+    '''Shows details of post in dashboard'''
     template_name = 'blog/job_apply.html'
 
     def get(self, request, **kwargs):    
@@ -157,6 +165,7 @@ class DashboardView(LoginRequiredMixin, UserPassesTestMixin, View):
 
 
 class ApplicantDetailView(LoginRequiredMixin, UserPassesTestMixin, DetailView):
+    '''Shows details of an applicant'''
     model = JobApplication
     template_name = 'blog/applicant_detail.html'
     context_object_name = 'applicant_detail'
@@ -173,6 +182,7 @@ class ApplicantDetailView(LoginRequiredMixin, UserPassesTestMixin, DetailView):
 
 
 class ApplicantDeleteView(LoginRequiredMixin,UserPassesTestMixin, DeleteView):
+    '''Deletes specified job applicant'''
     model = JobApplication
     template_name = 'blog/application_confirm_delete.html'
 
@@ -191,6 +201,7 @@ class ApplicantDeleteView(LoginRequiredMixin,UserPassesTestMixin, DeleteView):
 
 
 class ApplicantApprove(LoginRequiredMixin, UserPassesTestMixin, View):
+    '''Approves specified job applicant'''
     model = JobApplication
     template_name = 'blog/application_approve.html'
         
