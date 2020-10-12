@@ -21,15 +21,6 @@ def register(request):
             else:
                 form = UserRegisterForm()
                 profile_form = UserProfileForm(request.POST)
-
-            # user = form.save()
-
-            # profile = profile_form.save(commit=False)
-            # profile.user = user
-            # profile.save()
-            # username = form.cleaned_data.get('username')
-            # messages.success(request, f'Your account has been created successfully! You can now log in.')
-            # return redirect('login')
     else:
         form = UserRegisterForm()
         profile_form = UserProfileForm()

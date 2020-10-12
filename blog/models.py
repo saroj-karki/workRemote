@@ -5,17 +5,17 @@ from django.urls import reverse
 from phone_field import PhoneField
 from django import forms
 from phonenumber_field.modelfields import PhoneNumberField
-
+from .choices import *
 
 # Create your models here.
 
 class Post(models.Model):
-    # sno = models.AutoField(primary_key=True, default=None)
     title = models.CharField(max_length=100)
     content = models.TextField()
     date_posted = models.DateTimeField(default=timezone.now)
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     end_date = models.DateTimeField(null=True)
+    category = models.CharField(max_length=50, choices=JOB_CATEGORY, default="other")
 
     def __str__(self):
         return self.title
@@ -32,7 +32,6 @@ class JobApplication(models.Model):
     email = models.EmailField(max_length=100)
     phone = PhoneNumberField(blank=True)
     work_experience = models.TextField()
-    # resume = models.FileField(upload_to = 'resume', default='resume/default_resume.jpg')
     resume = models.FileField(upload_to = 'resume')
     status = models.CharField(max_length=200, default='pending')
 
