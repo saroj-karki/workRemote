@@ -1,18 +1,56 @@
 {% extends "blog/base.html" %}
 
 {% block content %}
-<ul class="list-group">
-    <label class="font-weight-bold" for="fullName">Name</label>
-    <li class="list-group-item mb-3">{{applicant_detail.name}}</li>
-    <label class="font-weight-bold" for="fullName">Email</label>
-    <li class="list-group-item mb-3">{{applicant_detail.email}}</li>
-    <label class="font-weight-bold" for="fullName">Phone</label>
-    <li class="list-group-item mb-3">{{applicant_detail.phone}}</li>
-    <label class="font-weight-bold" for="fullName">Work Experience</label>
-    <textarea disabled class="form-control mb-3" aria-label="With textarea">{{applicant_detail.work_experience}}</textarea>
-    <label class="font-weight-bold" for="fullName">Download Resume</label>
-    <a href="{{applicant_detail.resume.url}}" download>{{applicant_detail.resume}}</a>
-  </ul>
+<center><legend class="font-italic mb-4">Applicant Details</legend></center>
+<div class="content-section">
+  <div class="row">
+    <div class="col-sm-3">
+      <h6 class="mb-0">Full Name</h6>
+    </div>
+    <div class="col-sm-9 text-secondary">
+      {{applicant_detail.name}}
+    </div>
+  </div>
+  <hr>
+  <div class="row">
+    <div class="col-sm-3">
+      <h6 class="mb-0">Email</h6>
+    </div>
+    <div class="col-sm-9 text-secondary">
+      {{applicant_detail.email}}
+    </div>
+  </div>
+  <hr>
+  <div class="row">
+    <div class="col-sm-3">
+      <h6 class="mb-0">Phone</h6>
+    </div>
+    <div class="col-sm-9 text-secondary">
+      {{applicant_detail.phone}}
+    </div>
+  </div>
+  <hr>
+  <div class="row">
+    <div class="col-sm-3">
+      <h6 class="mb-0">Work Experience</h6>
+    </div>
+    <div class="col-sm-9 text-secondary">
+      {{applicant_detail.work_experience}}
+    </div>
+  </div>
+  <hr>
+  <div class="row">
+    <div class="col-sm-3">
+      <h6 class="mb-0">Download Resume</h6>
+    </div>
+    <div class="col-sm-9 text-secondary">
+      <a href="{{applicant_detail.resume.url}}" download>{{applicant_detail.resume}}</a>
+    </div>
+  </div>
+
+</div>
+ 
+  
   <div >
     <a class="btn btn btn-success float-right my-3 mx-3" href="{% url 'applicant-approve' applicant_detail.post.id applicant_detail.sno %}">Approve</a>
     <a class="btn btn btn-danger float-right my-3" href="{% url 'applicant-delete2' applicant_detail.post.id applicant_detail.sno %}">Reject</a>

@@ -7,10 +7,20 @@
     <form method="GET" action="{% url 'job-search' %}" class="my-2 my-lg-0 margin-left-5">
       <input class="form-control mr-sm-2" type="search" placeholder="Search Job" aria-label="Search"
         name="query" id="query">
-      <button class="btn btn-outline-secondary my-2 my-sm-0" type="submit">Search</button>
+      <button class="btn btn-outline-secondary my-2 my-sm-0" type="submit" name="page" value="1">Search</button>
     </form>
   </div>
 </div>
+
+<!-- <div class="d-flex flex-row-reverse">
+  <div class="form-inline my-2">
+    <form method="GET" action="" class="my-2 my-lg-0 margin-left-5">
+      {{ filter.form }}
+      <input type="submit" />
+    </form>
+  </div>
+</div> -->
+
 {% for post in posts %}
 
 <article class="media content-section">
@@ -21,6 +31,7 @@
             <small class="text-muted article-date">{{ post.date_posted|date:"F d, Y" }}</small>
         </div>
         <h2><a class="article-title" href="{% url 'post-detail' post.id %}">{{ post.title }}</a></h2>
+        <h2><a class="article-title" href="{% url 'post-detail' post.id %}">{{ pendingpost }}</a></h2>
         <p class="article-content">{{ post.content|safe| truncatechars:500 }}</p>
     </div>
 </article>

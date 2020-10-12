@@ -4,6 +4,7 @@
 {% load bootstrap4 %}
 {% bootstrap_css %}
 {% bootstrap_javascript jquery='full' %}
+
 {{ form.media }}
 
 
@@ -13,7 +14,7 @@
             {% csrf_token %}
             <fieldset class="form-group">
                 <legend class="border-bottom mb-4">Blog Post</legend>
-                {{ form|crispy }}
+                {% bootstrap_form form %}
             </fieldset>
             <div class="form-group">
                 <button class="btn btn-outline-info" type="submit">Post</button>

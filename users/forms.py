@@ -4,10 +4,7 @@ from django.contrib.auth.forms import UserCreationForm
 from .models import Profile
 
 
-
 class UserRegisterForm(UserCreationForm):
-
-
     email = forms.EmailField()
 
     class Meta:
@@ -19,8 +16,7 @@ class UserProfileForm(forms.ModelForm):
     CHOICES =( 
         ("organization", "Organization"), 
         ("personal", "Personal"), 
-    ) 
-    # account_type = forms.CharField(max_length=200)
+    )
     account_type = forms.ChoiceField(choices = CHOICES)
     class Meta:
         model = Profile
@@ -36,7 +32,8 @@ class UserUpdateForm(forms.ModelForm):
 
 
 class ProfileUpdateForm(forms.ModelForm):
+
     class Meta:
         model = Profile
-        fields = ['image']
+        fields = ['full_name', 'address', 'bio', 'image']
 

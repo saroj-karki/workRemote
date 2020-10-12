@@ -22,11 +22,11 @@
 
 {% if not object.author == user %}
     <div>
-        <a class="btn btn-success btn-sm mt-1 mb-1 float-right" href="{% url 'job-apply' post.id %}">Apply Now!</a>
+        <a class="btn btn-success btn-sm mt-1 mb-1 float-right" href="{% url 'job-apply' object.id %}">Apply Now!</a>
     </div>
 {% else %}
     <div>
-        <a class="btn btn-success btn-sm mt-1 mb-1 float-right" href="{% url 'job-dashboard' post.id %}">See Applicants</a>
+        <a class="btn btn-success btn-sm mt-1 mb-1 float-right" href="{% url 'job-dashboard' object.id %}">See Applicants</a>
     </div>
 {% endif %}
 
